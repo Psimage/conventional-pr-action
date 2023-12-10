@@ -28958,7 +28958,7 @@ async function getPrTitle() {
         throw new Error('The action expects to be triggered by a "pull_request" event.');
     }
     const prContext = github.context.payload.pull_request;
-    core.info('Github full event context: ' + github.context);
+    core.info('Github full event context: ' + JSON.stringify(github.context));
     core.info('PR title from context: ' + github.context.payload.pull_request.title);
     const client = github.getOctokit(core.getInput('github-token'));
     const owner = prContext.base.user.login;

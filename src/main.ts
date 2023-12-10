@@ -22,7 +22,7 @@ async function getPrTitle(): Promise<string> {
 
   const prContext = github.context.payload.pull_request
 
-  core.info('Github full event context: ' + github.context)
+  core.info('Github full event context: ' + JSON.stringify(github.context))
   core.info('PR title from context: ' + github.context.payload.pull_request.title)
 
   const client = github.getOctokit(core.getInput('github-token'))
