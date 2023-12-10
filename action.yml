@@ -14,9 +14,7 @@ inputs:
     required: false
     default: '${{ github.token }}'
 
-  allowedTypes: |
-    feat
-    fix
+  allowedTypes: '["feat", "fix"]'
 
 # ignoreIfLabeledWith: |
 #   skip-conventional-pr-action
