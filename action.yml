@@ -14,7 +14,9 @@ inputs:
     required: false
     default: '${{ github.token }}'
 
-  allowedTypes: '["feat", "fix"]'
+  allowedTypes:
+    description: 'Allowed types of commits'
+    required: false
 
 # ignoreIfLabeledWith: |
 #   skip-conventional-pr-action
