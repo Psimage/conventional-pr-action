@@ -17,9 +17,9 @@ inputs:
   allowedTypes: |
     feat
     fix
-    
-  # ignoreIfLabeledWith: |
-  #   skip-conventional-pr-action
+
+# ignoreIfLabeledWith: |
+#   skip-conventional-pr-action
 
 # Define your outputs here.
 # outputs:
