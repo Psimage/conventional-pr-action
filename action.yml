@@ -1,5 +1,5 @@
 name: 'Conventional PR Action'
-description: 'Check if PR title follows conventional commit format. Optionally adds a label to the PR.'
+description: 'Check if PR title follows conventional commit format. Optionally adds label to PR that corresponds to the type of the commit.'
 author: 'Yaroslav Buhaiev'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
@@ -9,15 +9,22 @@ branding:
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
+  githubToken:
+    description: 'GitHub API token. Default token is used by default'
+    required: false
+    default: '${{ github.token }}'
+
+  allowedTypes: |
+    feat
+    fix
+    
+  # ignoreIfLabeledWith: |
+  #   skip-conventional-pr-action
 
 # Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
+# outputs:
+#   time:
+#     description: 'Your output description here'
 
 runs:
   using: node20
