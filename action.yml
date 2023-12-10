@@ -9,12 +9,12 @@ branding:
 
 # Define your inputs here.
 inputs:
-  githubToken:
+  github-token:
     description: 'GitHub API token. Default token is used by default'
     required: false
     default: '${{ github.token }}'
 
-  allowedTypes:
+  allowed-types:
     description: 'Allowed types of commits'
     required: false
 
