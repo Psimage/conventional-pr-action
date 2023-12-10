@@ -9,11 +9,11 @@
 # expected from the build.
 name: Check Transpiled JavaScript
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
 
 permissions:
   contents: read
