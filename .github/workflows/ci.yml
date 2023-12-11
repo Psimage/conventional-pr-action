@@ -2,12 +2,9 @@ name: Continuous Integration
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
-
-permissions:
-  contents: read
+    types:
+      - opened
+      - edited
 
 jobs:
   test-typescript:
@@ -55,8 +52,4 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 2000
-
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+          allowed-types: '["feat", "fix"]'

@@ -1,89 +1,59 @@
-/**
- * Unit tests for the action's main functionality, src/main.ts
- *
- * These should be run as if the action was called from a workflow.
- * Specifically, the inputs listed in `action.yml` should be set as environment
- * variables following the pattern `INPUT_<INPUT_NAME>`.
- */
-
 import * as core from '@actions/core'
-import * as main from '../src/main'
+import * as github from '@actions/github'
+import { main } from '../src/main'
+import * as prTitleValidator from '../src/pr-title-validator'
+import { validateTitle } from '../src/pr-title-validator'
 
-// Mock the action's main function
-const runMock = jest.spyOn(main, 'run')
+jest.mock('@actions/core')
+jest.mock('@actions/github')
+jest.spyOn(prTitleValidator, 'validateTitle')
 
-// Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/
+function mockInputParams(inputParams: Record<string, string>): void {
+  jest.mocked(core.getInput).mockImplementation((name: string) => {
+    return inputParams[name]
+  })
+}
 
-// Mock the GitHub Actions core library
-let debugMock: jest.SpyInstance
-let errorMock: jest.SpyInstance
-let getInputMock: jest.SpyInstance
-let setFailedMock: jest.SpyInstance
-let setOutputMock: jest.SpyInstance
+function mockGithubContextPayload(prEventPayload: object): void {
+  github.context.payload = prEventPayload
+}
 
-describe('action', () => {
+describe('main function', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-
-    debugMock = jest.spyOn(core, 'debug').mockImplementation()
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
-    getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
   })
 
-  it('sets the time output', async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation((name: string): string => {
-      switch (name) {
-        case 'milliseconds':
-          return '500'
-        default:
-          return ''
-      }
-    })
+  it('should validate PR title with allowed types', async () => {
+    mockInputParams({ 'allowed-types': '["feat", "fix"]' })
+    mockGithubContextPayload({ pull_request: { title: 'feat: New Feature' } })
 
-    await main.run()
-    expect(runMock).toHaveReturned()
+    await main()
 
-    // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex)
-    )
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex)
-    )
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      expect.stringMatching(timeRegex)
-    )
-    expect(errorMock).not.toHaveBeenCalled()
+    expect(validateTitle).toHaveBeenCalledWith('feat: New Feature', [
+      'feat',
+      'fix'
+    ])
   })
 
-  it('sets a failed status', async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation((name: string): string => {
-      switch (name) {
-        case 'milliseconds':
-          return 'this is not a number'
-        default:
-          return ''
-      }
-    })
+  it('should set workflow failure if title validation fails', async () => {
+    mockInputParams({ 'allowed-types': '["feat"]' })
+    mockGithubContextPayload({ pull_request: { title: 'invalid-title' } })
 
-    await main.run()
-    expect(runMock).toHaveReturned()
+    await main()
 
-    // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds not a number'
+    expect(core.setFailed).toHaveBeenCalledWith(
+      'Bad PR title "invalid-title": does not match conventional format'
     )
-    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('should fail if action invoked by non pull_request event', async () => {
+    mockInputParams({ 'allowed-types': '["feat"]' })
+    mockGithubContextPayload({ pull_request: null })
+
+    await main()
+
+    expect(core.setFailed).toHaveBeenCalledWith(
+      'The action expects to be triggered by a "pull_request" event.'
+    )
   })
 })
