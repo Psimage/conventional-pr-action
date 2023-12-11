@@ -15,8 +15,9 @@ inputs:
     default: '${{ github.token }}'
 
   allowed-types:
-    description: 'Allowed types of commits'
+    description: 'Allowed types of commits. Specified as a JSON array of strings.'
     required: false
+    default: '["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]'
 
 # ignoreIfLabeledWith: |
 #   skip-conventional-pr-action

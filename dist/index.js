@@ -28906,6 +28906,25 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 5757:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseJsonList = void 0;
+const parseJsonList = (jsonList) => {
+    const list = JSON.parse(jsonList);
+    if (!Array.isArray(list)) {
+        throw new Error(`Input "${jsonList}" is not a JSON list`);
+    }
+    return list;
+};
+exports.parseJsonList = parseJsonList;
+
+
+/***/ }),
+
 /***/ 399:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -28935,16 +28954,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
+exports.main = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
-async function run() {
+const pr_title_validator_1 = __nccwpck_require__(6677);
+const input_parser_1 = __nccwpck_require__(5757);
+async function main() {
     try {
-        await getPrTitle();
+        (0, pr_title_validator_1.validateTitle)(getPrTitle(), getAllowedTypes());
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -28952,21 +28969,44 @@ async function run() {
             core.setFailed(error.message);
     }
 }
-exports.run = run;
-async function getPrTitle() {
+exports.main = main;
+function getPrTitle() {
     if (!github.context.payload.pull_request) {
         throw new Error('The action expects to be triggered by a "pull_request" event.');
     }
     const prContext = github.context.payload.pull_request;
-    core.info('Github full event context: ' + JSON.stringify(github.context));
-    core.info('PR title from context: ' + github.context.payload.pull_request.title);
-    const client = github.getOctokit(core.getInput('github-token'));
-    const owner = prContext.base.user.login;
-    const repo = prContext.base.repo.name;
-    const prTitleFromAPI = (await client.rest.pulls.get({ owner, repo, pull_number: prContext.number })).data.title;
-    core.info('PR title from API: ' + prTitleFromAPI);
-    return '';
+    const prTitle = prContext.title;
+    core.info(`PR title from context: ${prTitle}`);
+    return prTitle;
 }
+function getAllowedTypes() {
+    return (0, input_parser_1.parseJsonList)(core.getInput('allowed-types', { required: true }));
+}
+
+
+/***/ }),
+
+/***/ 6677:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.validateTitle = void 0;
+const conventionalTitleRegex = /^(?<type>[\w]+)(?:\((?<scope>[\w-]+)\))?(?<breaking>!)?:[ \t]+(?<message>.+)$/;
+function validateTitle(title, allowedTypes) {
+    const type = conventionalTitleRegex.exec(title)?.groups?.type;
+    if (type === undefined) {
+        throw new Error(`Bad PR title "${title}": does not match conventional format`);
+    }
+    if (allowedTypes.length === 0) {
+        return; // no allowed types means all types are allowed
+    }
+    if (!allowedTypes.includes(type)) {
+        throw new Error(`Bad PR title "${title}": actual type "${type}" is not one of the allowed types: [${allowedTypes.join(', ')}]`);
+    }
+}
+exports.validateTitle = validateTitle;
 
 
 /***/ }),
@@ -30864,7 +30904,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
  */
 const main_1 = __nccwpck_require__(399);
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
-(0, main_1.run)();
+(0, main_1.main)();
 
 })();
 

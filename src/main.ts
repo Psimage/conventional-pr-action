@@ -1,36 +1,32 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import type { PullRequest } from '@octokit/webhooks-types'
+import { validateTitle } from './pr-title-validator'
+import { parseJsonList } from './input-parser'
 
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
-export async function run(): Promise<void> {
+export async function main(): Promise<void> {
   try {
-    await getPrTitle()
+    validateTitle(getPrTitle(), getAllowedTypes())
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
-
 }
 
-async function getPrTitle(): Promise<string> {
+function getPrTitle(): string {
   if (!github.context.payload.pull_request) {
-    throw new Error('The action expects to be triggered by a "pull_request" event.')
+    throw new Error(
+      'The action expects to be triggered by a "pull_request" event.'
+    )
   }
 
-  const prContext = github.context.payload.pull_request
+  const prContext = github.context.payload.pull_request as PullRequest
+  const prTitle = prContext.title
 
-  core.info('Github full event context: ' + JSON.stringify(github.context))
-  core.info('PR title from context: ' + github.context.payload.pull_request.title)
+  core.info(`PR title from context: ${prTitle}`)
+  return prTitle
+}
 
-  const client = github.getOctokit(core.getInput('github-token'))
-  const owner = prContext.base.user.login
-  const repo = prContext.base.repo.name
-  const prTitleFromAPI = (await client.rest.pulls.get({ owner, repo, pull_number: prContext.number })).data.title
-
-  core.info('PR title from API: ' + prTitleFromAPI)
-
-  return ''
+function getAllowedTypes(): string[] {
+  return parseJsonList(core.getInput('allowed-types', { required: true }))
 }
