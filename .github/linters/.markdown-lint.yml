@@ -7,4 +7,4 @@ MD029:
   style: one
 
 MD013:
-  ignore_code_blocks: true
+  code_blocks: false
