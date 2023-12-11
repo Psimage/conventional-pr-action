@@ -1,3 +1,5 @@
+# Conventional PR Action
+
 This action checks if the title of a pull request is formatted according to
 the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 specification.
