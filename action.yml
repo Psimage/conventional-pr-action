@@ -9,23 +9,10 @@ branding:
 
 # Define your inputs here.
 inputs:
-  github-token:
-    description: 'GitHub API token. Default token is used by default'
-    required: false
-    default: '${{ github.token }}'
-
   allowed-types:
     description: 'Allowed types of commits. Specified as a JSON array of strings.'
     required: false
-    default: '["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]'
-
-# ignoreIfLabeledWith: |
-#   skip-conventional-pr-action
-
-# Define your outputs here.
-# outputs:
-#   time:
-#     description: 'Your output description here'
+    default: '["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert", "dependencies"]'
 
 runs:
   using: node20

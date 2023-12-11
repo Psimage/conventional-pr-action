@@ -39,17 +39,12 @@ jobs:
         id: npm-ci-test
         run: npm run ci-test
 
-  test-action:
-    name: GitHub Actions Test
+  test-conventional-pr-action:
+    name: Test conventional-pr-action
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
-      - name: Test Local Action
-        id: test-action
+      - name: Check PR title
         uses: ./
         with:
-          allowed-types: '["feat", "fix"]'
+          allowed-types: '["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert", "dependencies"]'

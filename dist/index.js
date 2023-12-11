@@ -28906,7 +28906,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 5757:
+/***/ 757:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -28957,8 +28957,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.main = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const pr_title_validator_1 = __nccwpck_require__(6677);
-const input_parser_1 = __nccwpck_require__(5757);
+const pr_title_validator_1 = __nccwpck_require__(677);
+const input_parser_1 = __nccwpck_require__(757);
 async function main() {
     try {
         (0, pr_title_validator_1.validateTitle)(getPrTitle(), getAllowedTypes());
@@ -28986,7 +28986,7 @@ function getAllowedTypes() {
 
 /***/ }),
 
-/***/ 6677:
+/***/ 677:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";

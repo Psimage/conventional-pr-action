@@ -1,37 +1,34 @@
-# Create a GitHub Action Using TypeScript
+This action checks if the title of a pull request is a formatted according to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+specification.
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
-[![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
+## Usage
 
-Use this template to bootstrap the creation of a TypeScript action. :rocket:
+Add this to your workflow file (e.g. `.github/workflows/validate-pr.yml`):
 
-This template includes compilation support, tests, a validation workflow,
-publishing, and versioning guidance.
+```yaml
+name: Validate PR
 
-If you are new, there's also a simpler introduction in the
-[Hello world JavaScript action repository](https://github.com/actions/hello-world-javascript-action).
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
 
-## Create Your Own Action
+jobs:
+  validate-pr:
+    name: Validate PR
+    runs-on: ubuntu-latest
 
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
+    steps:
+      - name: Check PR title
+        uses: Psimage/conventional-pr-action@v1 # Commit with the `v1` tag
+        with:
+          allowed-types: '["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert", "dependencies"]'
+```
 
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
+## Contributing
 
-> [!IMPORTANT]
->
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
-> details on how to use this file, see
-> [About code owners](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners).
-
-## Initial Setup
+### Initial Setup
 
 After you've cloned the repository to your local machine or codespace, you'll
 need to perform some initial setup steps before you can develop your action.
@@ -72,7 +69,7 @@ need to perform some initial setup steps before you can develop your action.
    ...
    ```
 
-## Update the Action Metadata
+### Update the Action Metadata
 
 The [`action.yml`](action.yml) file defines metadata about your action, such as
 input(s) and output(s). For details about this file, see
@@ -81,7 +78,7 @@ input(s) and output(s). For details about this file, see
 When you copy this repository, update `action.yml` with the name, description,
 inputs, and outputs for your action.
 
-## Update the Action Code
+### Update the Action Code
 
 The [`src/`](./src/) directory is the heart of your action! This contains the
 source code that will be run when your action is invoked. You can replace the
@@ -155,61 +152,7 @@ For information about versioning your action, see
 [Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
 in the GitHub Actions toolkit.
 
-## Validate the Action
-
-You can now validate the action by referencing it in a workflow file. For
-example, [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an
-action in the same repository.
-
-```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
-
-  - name: Test Local Action
-    id: test-action
-    uses: ./
-    with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
-```
-
-For example workflow runs, check out the
-[Actions tab](https://github.com/actions/typescript-action/actions)! :rocket:
-
-## Usage
-
-After testing, you can create version tag(s) that developers can use to
-reference different stable versions of your action. For more information, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
-
-To include the action in a workflow in another repository, you can use the
-`uses` syntax with the `@` symbol to reference a specific branch, tag, or commit
-hash.
-
-```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
-
-  - name: Test Local Action
-    id: test-action
-    uses: actions/typescript-action@v1 # Commit with the `v1` tag
-    with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
-```
-
-## Publishing a new release
+### Publishing a new release
 
 This project includes a helper script designed to streamline the process of
 tagging and pushing new releases for GitHub Actions.

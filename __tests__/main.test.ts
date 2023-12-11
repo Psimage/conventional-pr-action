@@ -29,10 +29,7 @@ describe('main function', () => {
 
     await main()
 
-    expect(validateTitle).toHaveBeenCalledWith('feat: New Feature', [
-      'feat',
-      'fix'
-    ])
+    expect(validateTitle).toHaveBeenCalledWith('feat: New Feature', ['feat', 'fix'])
   })
 
   it('should set workflow failure if title validation fails', async () => {
@@ -41,9 +38,7 @@ describe('main function', () => {
 
     await main()
 
-    expect(core.setFailed).toHaveBeenCalledWith(
-      'Bad PR title "invalid-title": does not match conventional format'
-    )
+    expect(core.setFailed).toHaveBeenCalledWith('Bad PR title "invalid-title": does not match conventional format')
   })
 
   it('should fail if action invoked by non pull_request event', async () => {
@@ -52,8 +47,6 @@ describe('main function', () => {
 
     await main()
 
-    expect(core.setFailed).toHaveBeenCalledWith(
-      'The action expects to be triggered by a "pull_request" event.'
-    )
+    expect(core.setFailed).toHaveBeenCalledWith('The action expects to be triggered by a "pull_request" event.')
   })
 })
