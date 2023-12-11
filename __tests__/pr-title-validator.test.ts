@@ -5,9 +5,7 @@ describe('validateTitle function', () => {
 
   it('should throw an error for invalid title format', () => {
     const invalidTitle = 'Invalid Title Format'
-    expect(() => validateTitle(invalidTitle, allowedTypes)).toThrow(
-      `Bad PR title "${invalidTitle}": does not match conventional format`
-    )
+    expect(() => validateTitle(invalidTitle, allowedTypes)).toThrow(`Bad PR title "${invalidTitle}": does not match conventional format`)
   })
 
   it('should throw an error for type not in allowedTypes', () => {
