@@ -1,4 +1,5 @@
-This action checks if the title of a pull request is a formatted according to the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+This action checks if the title of a pull request is a formatted according to
+the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 specification.
 
 ## Usage
