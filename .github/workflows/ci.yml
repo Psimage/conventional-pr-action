@@ -53,7 +53,3 @@ jobs:
         uses: ./
         with:
           allowed-types: '["feat", "fix"]'
-
-      - name: Print Output
-        id: output
-        run: 'echo "Test running echo: ${{ steps.test-action.outputs.time }}"'
