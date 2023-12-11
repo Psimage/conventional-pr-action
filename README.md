@@ -16,6 +16,7 @@ on:
     types:
       - opened
       - edited
+      - synchronize
 
 jobs:
   validate-pr:
