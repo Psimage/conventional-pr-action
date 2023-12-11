@@ -26,8 +26,6 @@ describe('parseJsonList function', () => {
 
   it('should throw an error for JSON input that is not a list', () => {
     const jsonNotList = '{"key": "value"}'
-    expect(() => parseJsonList(jsonNotList)).toThrow(
-      'Input "{"key": "value"}" is not a JSON list'
-    )
+    expect(() => parseJsonList(jsonNotList)).toThrow('Input "{"key": "value"}" is not a JSON list')
   })
 })

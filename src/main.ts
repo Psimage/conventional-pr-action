@@ -15,9 +15,7 @@ export async function main(): Promise<void> {
 
 function getPrTitle(): string {
   if (!github.context.payload.pull_request) {
-    throw new Error(
-      'The action expects to be triggered by a "pull_request" event.'
-    )
+    throw new Error('The action expects to be triggered by a "pull_request" event.')
   }
 
   const prContext = github.context.payload.pull_request as PullRequest
